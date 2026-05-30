@@ -1,10 +1,11 @@
+import json
 import requests
 import time
 from bs4 import BeautifulSoup
-from dataclasses import dataclass, field
-from datetime import datetime
+from dataclasses import dataclass, field, asdict
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional
-from datetime import timezone
 
 BASE_URL = "https://tenders.bhel.com/tenders"
 HEADERS = {
@@ -132,6 +133,17 @@ def scrape_all(max_pages: int = 50, known_nit_numbers: set[str] = None) -> list[
     return all_tenders
 
 
+def save_to_json(tenders: list[Tender], path: str = "tenders.json") -> None:
+    output = {
+        "scraped_at": datetime.now(timezone.utc).isoformat(),
+        "total": len(tenders),
+        "gem_count": sum(1 for t in tenders if t.is_gem),
+        "tenders": [asdict(t) for t in tenders],
+    }
+    Path(path).write_text(json.dumps(output, indent=2, ensure_ascii=False))
+    print(f"  Saved {len(tenders)} tenders to {path}")
+
+
 if __name__ == "__main__":
     print("Scraping tenders.bhel.com (first 2 pages for testing)...\n")
     tenders = scrape_all(max_pages=2)
@@ -140,6 +152,8 @@ if __name__ == "__main__":
     gem_tenders = [t for t in tenders if t.is_gem]
     print(f"GeM tenders: {len(gem_tenders)}")
     print(f"Non-GeM tenders: {len(tenders) - len(gem_tenders)}")
+
+    save_to_json(tenders)
 
     print("\n--- Sample (first 5) ---")
     for t in tenders[:5]:

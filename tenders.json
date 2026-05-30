@@ -1,0 +1,507 @@
+{
+  "scraped_at": "2026-05-30T19:55:12.308783+00:00",
+  "total": 50,
+  "gem_count": 19,
+  "tenders": [
+    {
+      "nit_number": "100177",
+      "notification_number": "GEM/2026/B/7602979",
+      "title": "FORGING",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 04:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/forging",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.360910+00:00"
+    },
+    {
+      "nit_number": "100176",
+      "notification_number": "BHEL PSSR SCT 2263",
+      "title": "SINGLE TENDER for OVERHAULING and COMMISSIONING WORKS OF TG PACKAGE AT BHAVINI KALPAKKAM",
+      "unit": "BHEL, PSSR",
+      "opening_date": "03-06-2026 11:00:25 AM",
+      "detail_url": "https://tenders.bhel.com/single-tender-bhel-pssr-sct-2263",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.360983+00:00"
+    },
+    {
+      "nit_number": "100175",
+      "notification_number": "GEM/2026/B/7603036",
+      "title": "GEM/2026/B/7603036  VERTICAL STAND",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 04:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/vertical-stand-0",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361033+00:00"
+    },
+    {
+      "nit_number": "100174",
+      "notification_number": "B/4011/6/0256V1 DATED 30.05.2026",
+      "title": "PROCUREMENT OF DRY AIR PRESERVATION SYSTEM FOR KODERMA AND DOLVI PROJECT",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "20-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/procurement-dry-air-preservation-system-koderma-and-dolvi-project",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361075+00:00"
+    },
+    {
+      "nit_number": "100173",
+      "notification_number": "HEAVY DUTY REVOLVING CENTRE MT 5",
+      "title": "HEAVY DUTY REVOLVING CENTRE MT 5",
+      "unit": "BHEL, Ranipet",
+      "opening_date": "04-06-2026 03:10:23 PM",
+      "detail_url": "https://tenders.bhel.com/supply-heavy-duty-revolving-centre-mt-5",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361119+00:00"
+    },
+    {
+      "nit_number": "100172",
+      "notification_number": "GEM/2026/B/7602772",
+      "title": "SPARES FOR KEMPPI MLS 4000 TIG WELDING MACHINES",
+      "unit": "BHEL, Trichy",
+      "opening_date": "09-06-2026 03:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/spares-kemppi-mls-4000-tig-welding-machines",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361159+00:00"
+    },
+    {
+      "nit_number": "100171",
+      "notification_number": "BHE/PW/NTPRT/LMT-SPARES/267",
+      "title": "PROCUREMENT OF SPARES OF LIMITORQUE MAKE ACTAUTOR",
+      "unit": "BHEL, PSWR",
+      "opening_date": "02-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/bhepwntprtlmt-spares267",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361198+00:00"
+    },
+    {
+      "nit_number": "100170",
+      "notification_number": "X/6600/2026/0121/R/1 (NIC TENDER ID: 2026_BHEL_61753_1)",
+      "title": "COMPLETE MACHINING OF PEDESTALS WITH BHEL MATERIAL",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "11-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/complete-machining-pedestals-bhel-material",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361237+00:00"
+    },
+    {
+      "nit_number": "100169",
+      "notification_number": "GEM/2026/B/7601150",
+      "title": "Stress Heat Resistant Bars, Spec- HW10673 Rev: 03, Dia-20, 25, 32, 35, 40, 45, 50, 60, 65, 70, 80, 90, 100, 110 and 120 mm.The tender enquiry has been issued on GeM and BHEL portals for wider circulation. However, the offer is to be submitted through GeM portal only. Also, all future corrigendum/corrigenda, addendum/addenda, amendments, time extensions, clarifications, etc. against the published GeM bid shall be issued on GeM portal only. Hence, the bidders are advised to check GeM portal only for latest updates/amendments/communications issued by BHEL against the current tender.",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "11-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/stress-heat-resistant-bars-spec-hw10673-rev-03-6",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361279+00:00"
+    },
+    {
+      "nit_number": "100168",
+      "notification_number": "GEM/2026/B/7601148",
+      "title": "Well Block GP3, Well Block P1, Well Block P2, Well Block L3",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/well-block-gp3-well-block-p1-well-block-p2-well-block-l3",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361318+00:00"
+    },
+    {
+      "nit_number": "100167",
+      "notification_number": "202607141 Tender id: 2026_BHEL_61739_1 Dt 30.05.2026",
+      "title": "Natural Gas",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "10-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/202607141-tender-id-2026bhel617391-dt-30052026",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361357+00:00"
+    },
+    {
+      "nit_number": "100166",
+      "notification_number": "GEM/2026/B/7595720",
+      "title": "LEAD SCREWS AS PER DRAWING",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 03:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/lead-screws-drawing",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361396+00:00"
+    },
+    {
+      "nit_number": "100165",
+      "notification_number": "GEM/2026/B/7600257",
+      "title": "Custom BID on GeM portal vide no. GEM/2026/B/7600257 for ALUMINUM ALLOY",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 03:30:20 PM",
+      "detail_url": "https://tenders.bhel.com/aluminum-alloy-1",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361435+00:00"
+    },
+    {
+      "nit_number": "100164",
+      "notification_number": "GEM/2026/B/7568421",
+      "title": "Procurement of Coagulation Analyzer Reagents for Human Samples",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "30-05-2026 06:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/coagulation-analyzer-reagents-human-samples",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361474+00:00"
+    },
+    {
+      "nit_number": "100163",
+      "notification_number": "2026_BHEL_61726_1",
+      "title": "Procurement of (ED7433499202)- Dual CPU Server-Grade Computer System and (ED7459999016)- Single CPU Server-Grade Computer System",
+      "unit": "BHEL EDN, Bangalore",
+      "opening_date": "09-06-2026 02:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/sake000123-procurement-ed7433499202-dual-cpu-server-grade-computer-system-and-ed7459999016-single",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361512+00:00"
+    },
+    {
+      "nit_number": "100162",
+      "notification_number": "E/E211/6/0544N1-BEARING COMPLETE- GEM BID",
+      "title": "BEARING COMPLETE- GEM BID",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:00:38 PM",
+      "detail_url": "https://tenders.bhel.com/ee21160544n1-bearing-complete-gem-bid",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361550+00:00"
+    },
+    {
+      "nit_number": "100161",
+      "notification_number": "SAKE000122",
+      "title": "Procurement of ED7459998010  Workstation Computer for DCS Application",
+      "unit": "BHEL EDN, Bangalore",
+      "opening_date": "09-06-2026 02:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/procurement-ed7459998010-workstation-computer-dcs-application",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361588+00:00"
+    },
+    {
+      "nit_number": "100160",
+      "notification_number": "GEM/2026/B/7590316",
+      "title": "Item code (1) W90313361061, CABLE/WIRE SUPPORT ,Itemcode (2) -W90313361118; MULTI-SEAL CABLE GLAND ,Itemcode (3) -W90313361037; MULT-SEAL CABLE GLAND",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 03:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/multi-seal-cable-gland",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361629+00:00"
+    },
+    {
+      "nit_number": "100159",
+      "notification_number": "BHE/PW/PTRU/PUR/HLD/ACC-1/260",
+      "title": "HELIUM LEAK DETECTION TEST OF AIR COOLED CONDENSER (ACC)  AT UNIT#1 OF 3X800MW BHEL-PATRATU PROJECT",
+      "unit": "BHEL, PSWR",
+      "opening_date": "06-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/bhepwptrupurhldacc-1260",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361668+00:00"
+    },
+    {
+      "nit_number": "100158",
+      "notification_number": "GEM/2026/B/ 7592868 (H182600009)",
+      "title": "Supply of End Cover & Pipe Clamps",
+      "unit": "HEAVY PLATES and VESSELS PLANT",
+      "opening_date": "06-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/supply-end-cover-pipe-clamps",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361709+00:00"
+    },
+    {
+      "nit_number": "100157",
+      "notification_number": "NIC TENDER ID 2026_BHEL_61723_1 DATED 29-May-2026, (BHEL ENQURY NO. E5163060)",
+      "title": "HS15250 BRUSH HOLDER ASSY. AS PER DRG. NO. 14392060056 VAR.00 REV.01.",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "08-06-2026 06:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/e5163060-rate-contract-supply-hs15250-brush-holder-assy",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361747+00:00"
+    },
+    {
+      "nit_number": "100156",
+      "notification_number": "GEM/2026/B/7601155",
+      "title": "MACHINE TAPS GEM/2026/B/7601155",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/machine-taps-0",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:07.361785+00:00"
+    },
+    {
+      "nit_number": "100155",
+      "notification_number": "NIC TENDER ID \t2026_BHEL_61722_1 DT. 29-05-2026, (BHEL ENQURY NO. E5163059)",
+      "title": "E5163059 RATE CONTRACT FOR SUPPLY OF HS15250 SET OF LEAD CONNECTOR ASSEMBLY",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "09-06-2026 06:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/e5163059-rate-contract-supply-hs15250-set-lead-connector-assembly",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361823+00:00"
+    },
+    {
+      "nit_number": "100154",
+      "notification_number": "NIC TENDER ID:  2026_BHEL_61708_1 (BHEL ENQURY NO.  E5163058)",
+      "title": "LOCTITE 270/ANABOND 112E (IN PACKING OF 50 ML EACH)",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "08-06-2026 06:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/e5163058rctm4303-loctite270anabond",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361861+00:00"
+    },
+    {
+      "nit_number": "100153",
+      "notification_number": "E4563014",
+      "title": "STEEL STUD (PLATED) (SUITABLE FOR 12X200 BUSBAR) TO DRG. NO. 45216901510-001, REV.04 (8 Items)",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "09-06-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/steel-stud-plated-suitable-12x200-busbar-drg-no-45216901510-001-rev04-8-items",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:07.361899+00:00"
+    },
+    {
+      "nit_number": "100152",
+      "notification_number": "E4563013",
+      "title": "LEVER (PLATED) TO DRG. NO. 45216001508-001, REV.04. (8 Items)",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "09-06-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/lever-plated-drg-no-45216001508-001-rev04-8-items",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.804884+00:00"
+    },
+    {
+      "nit_number": "100151",
+      "notification_number": "E4363011",
+      "title": "1) SET OF HARNESSED CABLES FOR DETC, TO SPECIFICATION NO.PLW/DETC/HARNESSED CABLE/SOR/002, REV. NIL.DTD. 22/07/2023 AND LATEST REVISION OF STR NO. CLW/(2017)/ELDO/(E)/STR/01,REV 00. COPPER PVC FACTOR 1:682.44 WITH BME COPPER BILLET PRICE, TOTAL VALUE (A) OF RS. 1246.438/- PER KG ON 16.04.26.",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "09-06-2026 05:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/1-set-harnessed-cables-detc-specification-noplwdetcharnessed-cablesor002-rev-nildtd-22072023-and",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.804925+00:00"
+    },
+    {
+      "nit_number": "100150",
+      "notification_number": "E3763010",
+      "title": "EAR PLUG AS PER ENQUIRY.",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "10-06-2026 04:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/ear-plug-3",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.804961+00:00"
+    },
+    {
+      "nit_number": "100149",
+      "notification_number": "GEM/2026/B/7595725",
+      "title": "AMMUNITION LOWER HOIST 5 STEP",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "08-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/ammunition-lower-hoist-5-step",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.804995+00:00"
+    },
+    {
+      "nit_number": "100148",
+      "notification_number": "GEM/2026/B/7595039",
+      "title": "THERMAL ARRAY RECORDER WITH 6 UNIVERSAL INPUT",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "08-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/thermal-array-recorder-6-universal-input",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805030+00:00"
+    },
+    {
+      "nit_number": "100147",
+      "notification_number": "77/26/6009/ILA Signal Cable",
+      "title": "Ennore Signal Cable  Retendering",
+      "unit": "ISG Bangalore",
+      "opening_date": "08-06-2026 06:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/ennore-signal-cable",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805058+00:00"
+    },
+    {
+      "nit_number": "100146",
+      "notification_number": "BHEL: SGD:2026: BLRCMG-31NIT",
+      "title": "Notice Inviting Tender (NIT) for procurement of ORC (Over Running Clutch) for APH at 1x660 MW BHEL Sagardighi site.",
+      "unit": "BHEL, PSER",
+      "opening_date": "30-05-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/notice-inviting-tender-nit-procurement-orc-over-running-clutch-aph-1x660-mw-bhel-sagardighi-site-0",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805086+00:00"
+    },
+    {
+      "nit_number": "100145",
+      "notification_number": "BHEL/FSIP/MM-WCC/26-27/W-13",
+      "title": "Renovation of Wex supervisor Office in BHEL FSIP factory at BHEL FSIP Jagdishpur",
+      "unit": "BHEL, CSU and FP Jagdishpur",
+      "opening_date": "09-06-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/renovation-wex-supervisor-office",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805121+00:00"
+    },
+    {
+      "nit_number": "100144",
+      "notification_number": "2026_BHEL_61712_1",
+      "title": "SUPPLY INSTALLATION COMMISSIONING AND TRAINING OF 01 SET OF X Ray Counter Machine - 1 No",
+      "unit": "BHEL EDN, Bangalore",
+      "opening_date": "09-06-2026 01:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/supply-installation-commissioning-and-training-01-set-x-ray-counter-machine-1-no",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805148+00:00"
+    },
+    {
+      "nit_number": "100143",
+      "notification_number": "GEM/2026/B/7598746",
+      "title": "'POSITION TRANSMITTER - (21142211010)",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:17:13 PM",
+      "detail_url": "https://tenders.bhel.com/gem2026b7598746",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805177+00:00"
+    },
+    {
+      "nit_number": "100142",
+      "notification_number": "2026_BHEL_61706_1",
+      "title": "SUPPLY INSTALLATION COMMISSIONING AND TRAINING OF 01 SET OF X Ray Inspection Machine 1 No",
+      "unit": "BHEL EDN, Bangalore",
+      "opening_date": "09-06-2026 01:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/supply-installation-commissioning-and-training-01-set-x-ray-inspection-machine-1-no",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805207+00:00"
+    },
+    {
+      "nit_number": "100141",
+      "notification_number": "Domestic open tender E/E243/2025/2874/Q/1, NIC tender ID \t2026_BHEL_61732_1 for Differential Pressure Regulating Valve",
+      "title": "Domestic open tender E/E243/2025/2874/Q/1, NIC tender ID \t2026_BHEL_61732_1 for Differential Pressure Regulating Valve through NIC portal",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "08-06-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/domestic-open-tender-ee24320252874q1-nic-tender-id-2026bhel617321-differential-pressure-regulating",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805242+00:00"
+    },
+    {
+      "nit_number": "100140",
+      "notification_number": "GEM/2026/B/7599368",
+      "title": "Procurement of Hydraulic Hose Line",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "08-06-2026 05:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/hydraulic-hose-line-8",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805276+00:00"
+    },
+    {
+      "nit_number": "100139",
+      "notification_number": "OS/WC/2026-27/28/15",
+      "title": "Works Contract for Engaging an agency for fabrication activities like Assembly, Welding and grinding works, etc. of Panels of NTPC LARA (SO NO.8217)-",
+      "unit": "HEAVY PLATES and VESSELS PLANT",
+      "opening_date": "08-06-2026 03:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/works-contract-engaging-agency-fabrication-activities-assembly-welding-and-grinding-works-etc",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805303+00:00"
+    },
+    {
+      "nit_number": "100138",
+      "notification_number": "GEM/2026/B/7598754",
+      "title": "BHEL/SSTP, Trichy is looking for vendors to supply of Grid Resistance Starter1900kW SRIM Through GeM PORTAL.",
+      "unit": "BHEL, Trichy",
+      "opening_date": "08-06-2026 03:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/grid-resistance-starter-1900kw-srim",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805338+00:00"
+    },
+    {
+      "nit_number": "100137",
+      "notification_number": "GEM/2026/B/7590076",
+      "title": "Tool Steel Plate / Flats Gr. T90Mn6WCr2, Spec- HW10892 Rev: 02, Size- 4x300x400 mm , Size- 6x400x400 mm and Size- 8x400x400 mm.The tender enquiry has been issued on GeM and BHEL portals for wider circulation. However, the offer is to be submitted through GeM portal only. Also, all future corrigendum/corrigenda, addendum/addenda, amendments, time extensions, clarifications, etc. against the published GeM bid shall be issued on GeM portal only. Hence, the bidders are advised to check GeM portal only for latest updates/amendments/communications issued by BHEL against the current tender.",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/tool-steel-plate-flats-gr-t90mn6wcr2-spec-hw10892-rev-02",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805374+00:00"
+    },
+    {
+      "nit_number": "100136",
+      "notification_number": "BHEL-IVP-SC-CCA-CS-03-2627",
+      "title": "Bending and Machining of CCA components",
+      "unit": "BHEL, IVP Goindwal Sahib",
+      "opening_date": "09-06-2026 03:30:30 PM",
+      "detail_url": "https://tenders.bhel.com/bending-and-machining-cca-components-0",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805406+00:00"
+    },
+    {
+      "nit_number": "100135",
+      "notification_number": "BID NO: GEM/2026/B/7598692",
+      "title": "DB SCAN&RS CONVERT W/O S/W-30 CH DUAL SC, DB SCANNER WITH RS CONVERTER, PC WITH SOFTWARE AND COMMUNICATION CABLE & 32 CH SCAN & RS CONVERT W/O S/W & ACCESS",
+      "unit": "BHEL, Trichy",
+      "opening_date": "08-06-2026 04:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/db-scanrs-convert-wo-sw-30-ch-dual-sc-db-scanner-rs-converter-pc-software-and-communication-cable",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805441+00:00"
+    },
+    {
+      "nit_number": "100134",
+      "notification_number": "BHEL/CPC/SGL/M_PCP/27/025",
+      "title": "Erection and Commissioning of Power Cycle Piping and its auxiliaries, Boiler Integral Piping, associated LP Piping etc. of Unit-1, Unit-2 and Common systems at 2x800 MW NTPC SINGRAULI STPP STAGE-III",
+      "unit": "CPC – PSHQ",
+      "opening_date": "09-06-2026 05:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/bhelcpcsglmpcp27025",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805477+00:00"
+    },
+    {
+      "nit_number": "100133",
+      "notification_number": "GeM Bid Number: GEM/2026/B/7597679",
+      "title": "procurement of \"COPPER SHEETS/PLATES  (4 types)\"",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "08-06-2026 03:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/procurement-copper-sheetsplates-4-types",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805507+00:00"
+    },
+    {
+      "nit_number": "100132",
+      "notification_number": "E4363014",
+      "title": "1) STARTER BATTERY 500AH,(LM), 24V CAPACITY SUITABLE FOR STARTING DIESEL ENGINE CONFORMING TO RDSO SPCN NO MP.0.24.00.65 (REV.00) DEC.2009 FOR DETC .THE STARTER BATTERY SHALL BE SUPPLIED AS PRE-CHARGED CONDITION, AND OGA DRAWING SHALL BE SUBMITTED FOR REFERENCE TO RECORD. (NOTE :VENDOR CODE & SUPPLY DATE ONLY TO BE PUNCHED/STICKER TO BE PUT ON EACH COMPONENT IN ADDITION TO TECHNICAL INFORMATION IF ANY.)",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "09-06-2026 05:00:00 PM",
+      "detail_url": "https://tenders.bhel.com/1-starter-battery-500ahlm-24v-capacity-suitable-starting-diesel-engine-conforming-rdso-spcn-no",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805537+00:00"
+    },
+    {
+      "nit_number": "100131",
+      "notification_number": "MM/FEEDERS/ E7863011 /29.05.2026 (NIC ID: 2026_BHEL_61695_1)",
+      "title": "0.08 TK X 8MM X 23 MR ROLL OF ADHESIVE COPPER FOIL AS PER INSK 30364  REV.02. MATERIAL TO BE SUPPLIED IN ROLL OF 23 MR.",
+      "unit": "BHEL, Bhopal",
+      "opening_date": "08-06-2026 03:05:00 PM",
+      "detail_url": "https://tenders.bhel.com/008-tk-x-8mm-x-23-mr-roll-adhesive-copper-foil-insk-30364-rev02",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805564+00:00"
+    },
+    {
+      "nit_number": "100130",
+      "notification_number": "GEM/2026/B/7578158",
+      "title": "Online Hydrogen and Oxygen analyzer",
+      "unit": "BHEL, R and D",
+      "opening_date": "08-06-2026 03:55:33 PM",
+      "detail_url": "https://tenders.bhel.com/online-hydrogen-and-oxygen-analyzer",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805590+00:00"
+    },
+    {
+      "nit_number": "100129",
+      "notification_number": "F/F219/26/0371/K1(GEM/2026/B/7596704)",
+      "title": "MILD STEEL PERFORATED SHEETS SPEC: AA10184 REV: 03OFFER TO BE SUBMITTED THROUGH GEM PORTAL ONLY. ALL CORRIGENDUM ADDENDUM, AMENDMENTS, TIME EXTENSION, CLARIFICATION ETC. WILL BE DONE ONLY ON GEM PORTAL.",
+      "unit": "BHEL, Haridwar",
+      "opening_date": "09-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/mild-steel-perforated-sheets",
+      "is_gem": false,
+      "scraped_at": "2026-05-30T19:55:10.805620+00:00"
+    },
+    {
+      "nit_number": "100128",
+      "notification_number": "GEM/2026/B/7596033",
+      "title": "Turning Carbide Inserts",
+      "unit": "BHEL, Trichy",
+      "opening_date": "09-06-2026 02:30:00 PM",
+      "detail_url": "https://tenders.bhel.com/turning-carbide-inserts",
+      "is_gem": true,
+      "scraped_at": "2026-05-30T19:55:10.805648+00:00"
+    }
+  ]
+}
