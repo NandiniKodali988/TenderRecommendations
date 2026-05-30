@@ -11,18 +11,36 @@ Single sub-contractor to start. Built for public hosting. Expand to multiple use
 ## Architecture
 
 ```
-Every morning (GitHub Actions cron)
-  → Scrape tenders.bhel.com for new tenders
-  → Store new ones in Supabase
-  → For each new tender, ask Claude Haiku:
-      "Does this tender match this sub-contractor's work scope? Score it."
-  → Email the sub-contractor a ranked digest of relevant tenders
+Daily scrape (GitHub Actions cron)
+  → Fetch ALL active BHEL tenders from tenders.bhel.com (no location filter)
+  → Store new ones in Supabase (skip already-seen tenders)
+
+For each sub-contractor profile:
+  → Step 1 — Hard filter (applied in code, no API cost):
+      - Location: only tenders from user's selected BHEL units
+      - Source: GeM only (ref starts with GEM/) or all
+      - Tender type: user's selected types (Work Contract, Supply, etc.)
+      - Value range: min/max if set
+  → Step 2 — Semantic match (Claude Haiku):
+      - Score each shortlisted tender against user's work scope description
+      - Attach a plain-English reason for the match
+  → Step 3 — Email digest:
+      - Send ranked list of relevant tenders with title, deadline, GeM link, match reason
 
 Web app (Streamlit on Streamlit Community Cloud)
-  → Sub-contractor fills in their profile once
-      (work categories, locations, value range, keywords)
+  → Sub-contractor sets profile once:
+      - Preferred BHEL locations (multi-select)
+      - Source preference: GeM only or all
+      - Tender types (multi-select)
+      - Work scope description (free text — what their company does)
+      - Value range (optional)
+      - Keywords to include / exclude (optional)
   → Can view past recommendations and their status
 ```
+
+## Key design principle
+
+The scraper fetches broadly and is profile-agnostic. Filters live in the profile, not the scraper. This means adding a new user later requires zero changes to the scraper — each profile independently filters and scores the same tender data.
 
 ## Tech stack (all free tier)
 
