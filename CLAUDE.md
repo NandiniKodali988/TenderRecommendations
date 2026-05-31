@@ -8,6 +8,24 @@ A tender recommendation platform for sub-contractors working with BHEL (Bharat H
 
 Single sub-contractor to start. Built for public hosting. Expand to multiple users later.
 
+## Build status
+
+Phase 1 (core pipeline) — **complete and working:**
+- `scraper.py` — scrapes tenders.bhel.com, early-stop on known tenders
+- `database.py` — Supabase client (upsert tenders, read profiles, save recommendations)
+- `matcher.py` — hard filter + Claude Haiku batch scoring
+- `emailer.py` — Gmail SMTP HTML digest
+- `run.py` — orchestrates full pipeline
+- `app.py` — Streamlit profile setup + recommendations dashboard
+- `.github/workflows/daily.yml` — GitHub Actions cron at 8 AM IST
+
+Phase 2 (portfolio enhancements) — **planned, build in this order:**
+1. RAG pipeline with pgvector
+2. User feedback loop
+3. Multi-agent architecture
+4. FastAPI backend
+5. Multi-user with Supabase Auth
+
 ## Architecture
 
 ```
@@ -42,7 +60,9 @@ Web app (Streamlit on Streamlit Community Cloud)
 
 The scraper fetches broadly and is profile-agnostic. Filters live in the profile, not the scraper. This means adding a new user later requires zero changes to the scraper — each profile independently filters and scores the same tender data.
 
-## Tech stack (all free tier)
+## Tech stack
+
+### Phase 1 (current, all free tier)
 
 | Component | Tool |
 |---|---|
@@ -52,6 +72,19 @@ The scraper fetches broadly and is profile-agnostic. Filters live in the profile
 | Matching engine | Claude Haiku API (~$0.003/day for ~20 tenders) |
 | Email digest | Gmail SMTP |
 | Scheduling | GitHub Actions cron (daily, every morning) |
+
+### Phase 2 (planned enhancements)
+
+| Component | Tool | Why |
+|---|---|---|
+| Vector embeddings | `sentence-transformers` (all-MiniLM-L6-v2) | Free, runs in GitHub Actions, no API cost |
+| Vector store | Supabase pgvector | Already in Supabase, no new service needed |
+| RAG pipeline | pgvector similarity search → Claude re-ranking | Most in-demand AI skill; replaces basic prompt matching |
+| Feedback loop | Thumbs up/down in Streamlit → stored in Supabase | Turns static AI into adaptive AI |
+| Multi-agent | Claude tool use — scraper / analyst / editor agents | Agentic AI architecture, very current |
+| REST API | FastAPI | Separates backend from UI; reusable by other clients |
+| Auth + multi-user | Supabase Auth (Google login) + Row Level Security | Makes it a real multi-tenant SaaS product |
+| Extra data sources | bidplus.gem.gov.in + eprocurebhel.co.in | Broader coverage, shows data pipeline engineering |
 
 ## Data sources
 
@@ -67,12 +100,20 @@ Three tables in Supabase:
 
 ## Build order
 
-1. Scraper — fetch and parse tenders.bhel.com, understand data structure
-2. Database schema — create tables in Supabase
-3. Matching engine — Claude Haiku prompt that scores a tender against a profile
-4. Email digest — format and send via Gmail SMTP
-5. GitHub Actions workflow — wire steps 1-4 into a daily cron
-6. Streamlit app — profile setup UI + recommendations dashboard
+### Phase 1 (complete)
+1. ~~Scraper — fetch and parse tenders.bhel.com~~
+2. ~~Database schema — tenders, profiles, recommendations tables~~
+3. ~~Matching engine — Claude Haiku batch scoring~~
+4. ~~Email digest — Gmail SMTP~~
+5. ~~GitHub Actions cron workflow~~
+6. ~~Streamlit app — profile setup + recommendations dashboard~~
+
+### Phase 2 (next)
+7. RAG pipeline — embed tenders with sentence-transformers, store in pgvector, semantic search before Claude scoring
+8. Feedback loop — thumbs up/down in UI feeds back into scoring weights
+9. Multi-agent — Claude tool use for scraper / analyst / editor agents
+10. FastAPI backend — REST API layer, Streamlit becomes a thin client
+11. Multi-user + auth — Supabase Auth, RLS, each user sees only their data
 
 ## Credentials needed (stored as GitHub Actions secrets + Streamlit secrets)
 
