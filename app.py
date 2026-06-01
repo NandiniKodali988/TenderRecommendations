@@ -3,7 +3,7 @@ import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 
-from database import get_client
+from database import get_client, save_feedback
 
 BHEL_UNITS = [
     "BHEL, Hyderabad", "BHEL, Haridwar", "BHEL, Bhopal", "BHEL, Trichy",
@@ -109,6 +109,25 @@ if page == "My Recommendations":
                 if r.get("emailed_at"):
                     st.caption(f"Emailed on {r['emailed_at'][:10]}")
                 st.link_button("View Tender →", t["detail_url"])
+
+            st.divider()
+            feedback_val = r.get("feedback")
+            fb_col1, fb_col2, fb_col3 = st.columns([1, 1, 6])
+            with fb_col1:
+                thumbs_up_type = "primary" if feedback_val == 1 else "secondary"
+                if st.button("👍 Helpful", key=f"up_{r['id']}", type=thumbs_up_type):
+                    save_feedback(client, r["id"], 1)
+                    st.rerun()
+            with fb_col2:
+                thumbs_down_type = "primary" if feedback_val == -1 else "secondary"
+                if st.button("👎 Not helpful", key=f"down_{r['id']}", type=thumbs_down_type):
+                    save_feedback(client, r["id"], -1)
+                    st.rerun()
+            with fb_col3:
+                if feedback_val == 1:
+                    st.caption("Feedback saved — future recommendations will lean toward tenders like this.")
+                elif feedback_val == -1:
+                    st.caption("Feedback saved — this type of tender will be deprioritised.")
 
 
 # --- Profile Page ---

@@ -1,10 +1,13 @@
 import json
 import os
+import numpy as np
 import anthropic
 from embedder import embed_query, find_similar_tenders
+from database import get_liked_tender_embeddings
 
 MODEL = "claude-haiku-4-5-20251001"
 TOP_K = 20  # number of candidates to retrieve via vector search before Claude re-ranks
+MAX_FEEDBACK_WEIGHT = 0.3  # feedback signal caps at 30% of the query vector blend
 
 
 def keyword_filter(tenders: list[dict], profile: dict) -> list[dict]:
@@ -83,6 +86,20 @@ If none score 5 or above, return: []"""
     return json.loads(raw.strip())
 
 
+def _feedback_boost_vector(client, profile_id: str) -> tuple[list[float], int] | tuple[None, int]:
+    """
+    Average the embeddings of tenders the user liked, then normalize.
+    Returns (normalized_vector, count) so the caller can compute a dynamic weight.
+    Returns (None, 0) if no positive feedback exists yet.
+    """
+    vectors = get_liked_tender_embeddings(client, profile_id)
+    if not vectors:
+        return None, 0
+    avg = np.mean([np.array(v) for v in vectors], axis=0)
+    norm = np.linalg.norm(avg)
+    return ((avg / norm).tolist() if norm > 0 else None), len(vectors)
+
+
 def match_profile(client, profile: dict) -> list[dict]:
     """
     RAG matching pipeline for one profile:
@@ -100,6 +117,17 @@ def match_profile(client, profile: dict) -> list[dict]:
     # Step 1 — embed the query
     print("  Embedding work scope...")
     query_vec = embed_query(work_scope)
+
+    # Step 1b — blend with feedback signal if the user has liked tenders before.
+    # Weight grows with each liked tender (0.03 per like), capping at MAX_FEEDBACK_WEIGHT.
+    # This avoids a cold-start problem where 1-2 early likes dominate the query.
+    boost_vec, liked_count = _feedback_boost_vector(client, profile["id"])
+    if boost_vec:
+        feedback_weight = min(MAX_FEEDBACK_WEIGHT, liked_count * 0.03)
+        blended = (1 - feedback_weight) * np.array(query_vec) + feedback_weight * np.array(boost_vec)
+        norm = np.linalg.norm(blended)
+        query_vec = (blended / norm).tolist() if norm > 0 else query_vec
+        print(f"  Query boosted with feedback signal ({liked_count} likes, weight={feedback_weight:.2f})")
 
     # Step 2 — vector search (location + GeM filter applied server-side)
     candidates = find_similar_tenders(

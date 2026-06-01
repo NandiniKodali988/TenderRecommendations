@@ -72,3 +72,30 @@ def mark_emailed(client: Client, recommendation_ids: list[str]) -> None:
     now = datetime.now(timezone.utc).isoformat()
     for rec_id in recommendation_ids:
         client.table("recommendations").update({"emailed_at": now}).eq("id", rec_id).execute()
+
+
+def save_feedback(client: Client, rec_id: str, value: int) -> None:
+    """Store thumbs up (1) or thumbs down (-1) for a recommendation."""
+    client.table("recommendations").update({"feedback": value}).eq("id", rec_id).execute()
+
+
+def get_liked_tender_embeddings(client: Client, profile_id: str) -> list[list[float]]:
+    """Return embeddings of tenders the user rated helpful (feedback=1)."""
+    import json
+    recs = (
+        client.table("recommendations")
+        .select("tender_id")
+        .eq("profile_id", profile_id)
+        .eq("feedback", 1)
+        .execute()
+    )
+    if not recs.data:
+        return []
+    tender_ids = [r["tender_id"] for r in recs.data]
+    tenders = client.table("tenders").select("embedding").in_("id", tender_ids).execute()
+    vectors = []
+    for t in tenders.data:
+        raw = t.get("embedding")
+        if raw:
+            vectors.append(json.loads(raw) if isinstance(raw, str) else raw)
+    return vectors
