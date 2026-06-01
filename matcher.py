@@ -1,35 +1,19 @@
 import json
 import os
 import anthropic
+from embedder import embed_query, find_similar_tenders
 
 MODEL = "claude-haiku-4-5-20251001"
+TOP_K = 20  # number of candidates to retrieve via vector search before Claude re-ranks
 
 
-def hard_filter(tenders: list[dict], profile: dict) -> list[dict]:
+def keyword_filter(tenders: list[dict], profile: dict) -> list[dict]:
     """
-    Apply the profile's preference filters before sending anything to Claude.
-    Each filter only runs if the profile has set that preference.
+    Apply keyword include/exclude filters after vector search.
+    Location and GeM filters are handled server-side in find_similar_tenders.
     """
     results = tenders
 
-    # Location filter
-    preferred_units = profile.get("preferred_units") or []
-    if preferred_units:
-        results = [t for t in results if t["unit"] in preferred_units]
-
-    # GeM-only filter
-    if profile.get("gem_only"):
-        results = [t for t in results if t.get("is_gem")]
-
-    # Tender type filter — title-based keyword match since we don't scrape type yet
-    preferred_types = profile.get("preferred_tender_types") or []
-    if preferred_types:
-        results = [
-            t for t in results
-            if any(pt.lower() in (t.get("title") or "").lower() for pt in preferred_types)
-        ]
-
-    # Keyword inclusion filter
     include_keywords = profile.get("include_keywords") or []
     if include_keywords:
         results = [
@@ -37,7 +21,6 @@ def hard_filter(tenders: list[dict], profile: dict) -> list[dict]:
             if any(kw.lower() in (t.get("title") or "").lower() for kw in include_keywords)
         ]
 
-    # Keyword exclusion filter
     exclude_keywords = profile.get("exclude_keywords") or []
     if exclude_keywords:
         results = [
@@ -48,10 +31,10 @@ def hard_filter(tenders: list[dict], profile: dict) -> list[dict]:
     return results
 
 
-def score_tenders_with_claude(tenders: list[dict], profile: dict) -> list[dict]:
+def rerank_with_claude(tenders: list[dict], profile: dict) -> list[dict]:
     """
-    Send all shortlisted tenders to Claude Haiku in a single call.
-    Returns list of {tender_id, score, reason} dicts for score >= 5.
+    Re-rank vector search candidates with Claude Haiku.
+    Returns list of {tender_id, score, reason} for score >= 5.
     """
     if not tenders:
         return []
@@ -59,7 +42,8 @@ def score_tenders_with_claude(tenders: list[dict], profile: dict) -> list[dict]:
     work_scope = profile.get("work_scope") or "General construction and procurement"
 
     tender_list = "\n".join(
-        f"{i+1}. [ID: {t['id']}] {t['title']} | Unit: {t['unit']} | Opening: {t['opening_date']}"
+        f"{i+1}. [ID: {t['id']}] {t['title']} | Unit: {t['unit']} | "
+        f"Vector similarity: {t.get('similarity', 0):.2f}"
         for i, t in enumerate(tenders)
     )
 
@@ -68,20 +52,20 @@ def score_tenders_with_claude(tenders: list[dict], profile: dict) -> list[dict]:
 Sub-contractor's work scope:
 {work_scope}
 
-Below are BHEL tenders. For each one, score its relevance to the sub-contractor's work scope on a scale of 1-10, and give a one-sentence reason.
-
-Only include tenders with a score of 5 or above in your response.
+These tenders were pre-selected by semantic similarity search as potentially relevant.
+Score each on a scale of 1-10 for relevance to the work scope, and give a one-sentence reason.
+Only include tenders scoring 5 or above.
 
 Tenders:
 {tender_list}
 
-Respond in JSON only, as an array of objects with this structure:
+Respond in JSON only:
 [
   {{"tender_id": "<id>", "score": <1-10>, "reason": "<one sentence>"}},
   ...
 ]
 
-If no tenders score 5 or above, return an empty array: []"""
+If none score 5 or above, return: []"""
 
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     message = client.messages.create(
@@ -91,7 +75,6 @@ If no tenders score 5 or above, return an empty array: []"""
     )
 
     raw = message.content[0].text.strip()
-    # Strip markdown code fences if present
     if raw.startswith("```"):
         raw = raw.split("```")[1]
         if raw.startswith("json"):
@@ -100,24 +83,49 @@ If no tenders score 5 or above, return an empty array: []"""
     return json.loads(raw.strip())
 
 
-def match_profile(tenders: list[dict], profile: dict) -> list[dict]:
+def match_profile(client, profile: dict) -> list[dict]:
     """
-    Full matching pipeline for one profile:
-    1. Hard filter by preferences
-    2. Claude semantic scoring
+    RAG matching pipeline for one profile:
+    1. Embed the profile's work scope
+    2. Vector similarity search in pgvector (filtered by unit/GeM server-side)
+    3. Keyword include/exclude filter
+    4. Claude re-ranks the top candidates
     Returns scored results ready to save as recommendations.
     """
-    print(f"  Total tenders to consider: {len(tenders)}")
-
-    shortlisted = hard_filter(tenders, profile)
-    print(f"  After hard filter: {len(shortlisted)}")
-
-    if not shortlisted:
-        print("  Nothing passed the hard filter.")
+    work_scope = profile.get("work_scope") or ""
+    if not work_scope:
+        print("  No work scope set, skipping.")
         return []
 
-    scored = score_tenders_with_claude(shortlisted, profile)
-    print(f"  Claude scored {len(scored)} as relevant (score >= 5)")
+    # Step 1 — embed the query
+    print("  Embedding work scope...")
+    query_vec = embed_query(work_scope)
+
+    # Step 2 — vector search (location + GeM filter applied server-side)
+    candidates = find_similar_tenders(
+        client=client,
+        query_embedding=query_vec,
+        top_k=TOP_K,
+        only_gem=profile.get("gem_only", False),
+        preferred_units=profile.get("preferred_units") or [],
+    )
+    print(f"  Vector search returned: {len(candidates)} candidates")
+
+    if not candidates:
+        print("  No candidates from vector search.")
+        return []
+
+    # Step 3 — keyword filters
+    candidates = keyword_filter(candidates, profile)
+    print(f"  After keyword filter: {len(candidates)}")
+
+    if not candidates:
+        print("  Nothing passed keyword filter.")
+        return []
+
+    # Step 4 — Claude re-ranks
+    scored = rerank_with_claude(candidates, profile)
+    print(f"  Claude selected {len(scored)} as relevant (score >= 5)")
 
     return scored
 
@@ -128,13 +136,10 @@ if __name__ == "__main__":
     from database import get_client
 
     client = get_client()
-    tenders = client.table("tenders").select("*").execute().data
-    print(f"Loaded {len(tenders)} tenders from Supabase\n")
 
     sample_profile = {
         "id": "test-profile-001",
         "name": "Test Sub-Contractor",
-        "email": "test@example.com",
         "work_scope": (
             "Civil construction, structural fabrication, erection and commissioning "
             "of industrial equipment, boiler and turbine installation, mechanical works "
@@ -142,20 +147,17 @@ if __name__ == "__main__":
         ),
         "preferred_units": ["BHEL, Hyderabad", "BHEL, Trichy", "BHEL, Haridwar"],
         "gem_only": True,
-        "preferred_tender_types": [],
         "include_keywords": [],
         "exclude_keywords": [],
     }
 
-    print(f"Running matcher for: {sample_profile['name']}")
+    print(f"Running RAG matcher for: {sample_profile['name']}")
     print(f"Work scope: {sample_profile['work_scope'][:80]}...\n")
 
-    results = match_profile(tenders, sample_profile)
+    results = match_profile(client, sample_profile)
 
     print("\n--- Recommendations ---")
     for r in results:
-        tender = next(t for t in tenders if t["id"] == r["tender_id"])
-        print(f"  Score {r['score']}/10 — {tender['title']}")
+        print(f"  Score {r['score']}/10 — tender_id: {r['tender_id']}")
         print(f"  Reason: {r['reason']}")
-        print(f"  Unit: {tender['unit']} | Opening: {tender['opening_date']}")
         print()

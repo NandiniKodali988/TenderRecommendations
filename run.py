@@ -12,6 +12,7 @@ from database import (
     mark_emailed,
 )
 from scraper import scrape_all
+from embedder import embed_tenders, store_embeddings
 from matcher import match_profile
 from emailer import send_digest
 
@@ -27,6 +28,16 @@ def main():
     inserted = upsert_tenders(client, new_tenders)
     print(f"  New tenders inserted: {inserted}")
 
+    # Step 1b — Embed new tenders
+    if new_tenders:
+        print("  Embedding new tenders...")
+        tenders_from_db = client.table("tenders").select("*").in_(
+            "nit_number", [t.nit_number for t in new_tenders]
+        ).execute().data
+        pairs = embed_tenders(tenders_from_db)
+        stored = store_embeddings(client, pairs)
+        print(f"  Embeddings stored: {stored}")
+
     # Step 2 — Match and email each profile
     print("\n=== Step 2: Matching profiles ===")
     profiles = get_all_profiles(client)
@@ -35,14 +46,7 @@ def main():
     for profile in profiles:
         print(f"\n  Profile: {profile['name']} ({profile['email']})")
 
-        unmatched = get_unmatched_tenders(client, profile["id"])
-        print(f"  Unmatched tenders to score: {len(unmatched)}")
-
-        if not unmatched:
-            print("  Nothing new to match, skipping.")
-            continue
-
-        scored = match_profile(unmatched, profile)
+        scored = match_profile(client, profile)
 
         # Save all scored recommendations to DB
         for r in scored:
@@ -56,8 +60,10 @@ def main():
 
         # Send email only for recommendations scoring 5+
         if scored:
-            # Enrich with full tender details for the email
-            tender_map = {t["id"]: t for t in unmatched}
+            # Fetch full tender details for email enrichment
+            tender_ids = [r["tender_id"] for r in scored]
+            tender_rows = client.table("tenders").select("*").in_("id", tender_ids).execute().data
+            tender_map = {t["id"]: t for t in tender_rows}
             enriched = [
                 {
                     "relevance_score": r["score"],
