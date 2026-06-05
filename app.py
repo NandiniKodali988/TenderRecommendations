@@ -1,9 +1,18 @@
 import os
+import secrets
+import hashlib
+import base64
+import urllib.parse
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 
-from database import get_client, save_feedback
+from supabase import create_client, Client
+from database import save_feedback
+
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
+APP_URL = os.environ.get("APP_URL", "http://localhost:8501")
 
 BHEL_UNITS = [
     "BHEL, Hyderabad", "BHEL, Haridwar", "BHEL, Bhopal", "BHEL, Trichy",
@@ -22,15 +31,104 @@ TENDER_TYPES = [
 
 st.set_page_config(page_title="BHEL Tender Recommendations", page_icon="📋", layout="wide")
 
-client = get_client()
 
+# --- PKCE helpers ---
+
+def _pkce_pair() -> tuple[str, str]:
+    """Generate (code_verifier, code_challenge) for PKCE OAuth."""
+    verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).rstrip(b"=").decode()
+    challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(verifier.encode()).digest()
+    ).rstrip(b"=").decode()
+    return verifier, challenge
+
+
+def _google_auth_url() -> str:
+    """
+    Build the Supabase Google OAuth URL with PKCE.
+    The code verifier is embedded in the redirect URL so it survives
+    the OAuth round-trip without relying on session state.
+    """
+    verifier, challenge = _pkce_pair()
+    redirect = APP_URL + "?pkce_verifier=" + urllib.parse.quote(verifier, safe="")
+    qs = urllib.parse.urlencode({
+        "provider": "google",
+        "redirect_to": redirect,
+        "code_challenge": challenge,
+        "code_challenge_method": "S256",
+    })
+    return f"{SUPABASE_URL}/auth/v1/authorize?{qs}"
+
+
+# --- Auth helpers ---
+
+def get_anon_client() -> Client:
+    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+
+def get_authed_client() -> Client:
+    client = get_anon_client()
+    if "access_token" in st.session_state:
+        try:
+            client.auth.set_session(
+                st.session_state["access_token"],
+                st.session_state["refresh_token"],
+            )
+        except Exception:
+            for key in ["user", "access_token", "refresh_token"]:
+                st.session_state.pop(key, None)
+            st.rerun()
+    return client
+
+
+# --- Handle OAuth callback ---
+params = st.query_params
+if "code" in params:
+    verifier = params.get("pkce_verifier", "")
+    try:
+        _client = get_anon_client()
+        response = _client.auth.exchange_code_for_session({
+            "auth_code": params["code"],
+            "code_verifier": verifier,
+        })
+        st.session_state["access_token"] = response.session.access_token
+        st.session_state["refresh_token"] = response.session.refresh_token
+        st.session_state["user"] = response.user
+        st.query_params.clear()
+        st.rerun()
+    except Exception as e:
+        st.error(f"Login failed: {e}")
+        st.stop()
+
+
+# --- Require login ---
+if "user" not in st.session_state:
+    st.title("BHEL Tender Recommendations")
+    st.markdown("Sign in to view your personalised tender recommendations.")
+    st.link_button("Sign in with Google", _google_auth_url(), type="primary")
+    st.stop()
+
+
+# --- Logged-in state ---
+client = get_authed_client()
+user = st.session_state["user"]
+
+
+# --- Data helpers ---
 
 def load_profile():
-    result = client.table("profiles").select("*").limit(1).execute()
+    result = (
+        client.table("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .limit(1)
+        .execute()
+    )
     return result.data[0] if result.data else None
 
 
 def save_profile(data: dict):
+    data["user_id"] = user.id
     existing = load_profile()
     if existing:
         client.table("profiles").update(data).eq("id", existing["id"]).execute()
@@ -38,10 +136,11 @@ def save_profile(data: dict):
         client.table("profiles").insert(data).execute()
 
 
-def load_recommendations():
+def load_recommendations(profile_id: str):
     result = (
         client.table("recommendations")
         .select("*, tenders(*)")
+        .eq("profile_id", profile_id)
         .order("relevance_score", desc=True)
         .execute()
     )
@@ -50,6 +149,12 @@ def load_recommendations():
 
 # --- Sidebar ---
 st.sidebar.title("📋 BHEL Tenders")
+st.sidebar.caption(f"Signed in as {user.email}")
+if st.sidebar.button("Sign out"):
+    for key in ["user", "access_token", "refresh_token"]:
+        st.session_state.pop(key, None)
+    st.rerun()
+
 page = st.sidebar.radio("Navigate", ["My Recommendations", "My Profile"])
 st.sidebar.divider()
 st.sidebar.caption("Tenders sourced from tenders.bhel.com\nRecommendations powered by AI")
@@ -64,7 +169,7 @@ if page == "My Recommendations":
         st.warning("No profile set up yet. Go to **My Profile** to get started.")
         st.stop()
 
-    recs = load_recommendations()
+    recs = load_recommendations(profile["id"])
 
     if not recs:
         st.info("No recommendations yet. The daily digest runs every morning at 8 AM IST.")
@@ -77,7 +182,6 @@ if page == "My Recommendations":
 
     st.divider()
 
-    # Filters
     with st.expander("Filters", expanded=False):
         min_score = st.slider("Minimum relevance score", 1, 10, 5)
         gem_filter = st.checkbox("GeM tenders only", value=False)
