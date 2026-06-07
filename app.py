@@ -12,7 +12,7 @@ from database import save_feedback
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
-APP_URL = os.environ.get("APP_URL", "http://localhost:8501")
+APP_URL = os.environ.get("APP_URL", "http://localhost:8501").strip()
 
 BHEL_UNITS = [
     "BHEL, Hyderabad", "BHEL, Haridwar", "BHEL, Bhopal", "BHEL, Trichy",
