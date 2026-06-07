@@ -34,8 +34,14 @@ st.set_page_config(page_title="BHEL Tender Recommendations", page_icon="📋", l
 
 # --- PKCE helpers ---
 
+@st.cache_resource
+def _pkce_store() -> dict:
+    # Server-side store — persists across browser redirects within the same process.
+    # Single-user safe: for multi-user production, key by session ID instead.
+    return {"verifier": ""}
+
+
 def _pkce_pair() -> tuple[str, str]:
-    """Generate (code_verifier, code_challenge) for PKCE OAuth."""
     verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).rstrip(b"=").decode()
     challenge = base64.urlsafe_b64encode(
         hashlib.sha256(verifier.encode()).digest()
@@ -44,16 +50,11 @@ def _pkce_pair() -> tuple[str, str]:
 
 
 def _google_auth_url() -> str:
-    """
-    Build the Supabase Google OAuth URL with PKCE.
-    The code verifier is embedded in the redirect URL so it survives
-    the OAuth round-trip without relying on session state.
-    """
     verifier, challenge = _pkce_pair()
-    redirect = APP_URL + "?pkce_verifier=" + urllib.parse.quote(verifier, safe="")
+    _pkce_store()["verifier"] = verifier  # Save before redirect
     qs = urllib.parse.urlencode({
         "provider": "google",
-        "redirect_to": redirect,
+        "redirect_to": APP_URL,
         "code_challenge": challenge,
         "code_challenge_method": "S256",
     })
@@ -84,7 +85,7 @@ def get_authed_client() -> Client:
 # --- Handle OAuth callback ---
 params = st.query_params
 if "code" in params:
-    verifier = params.get("pkce_verifier", "")
+    verifier = _pkce_store().get("verifier", "")
     try:
         _client = get_anon_client()
         response = _client.auth.exchange_code_for_session({
