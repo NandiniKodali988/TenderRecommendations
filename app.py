@@ -7,6 +7,7 @@ import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 
+import httpx
 from supabase import create_client, Client
 from database import save_feedback
 
@@ -117,29 +118,38 @@ user = st.session_state["user"]
 
 # --- Data helpers ---
 
+def _fresh_client() -> Client:
+    """Always return a new authenticated client to avoid stale HTTP/2 connections."""
+    return get_authed_client()
+
+
 def load_profile():
-    result = (
-        client.table("profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .limit(1)
-        .execute()
-    )
-    return result.data[0] if result.data else None
+    try:
+        result = (
+            _fresh_client().table("profiles")
+            .select("*")
+            .eq("user_id", user.id)
+            .limit(1)
+            .execute()
+        )
+        return result.data[0] if result.data else None
+    except httpx.RemoteProtocolError:
+        st.rerun()
 
 
 def save_profile(data: dict):
     data["user_id"] = user.id
     existing = load_profile()
+    c = _fresh_client()
     if existing:
-        client.table("profiles").update(data).eq("id", existing["id"]).execute()
+        c.table("profiles").update(data).eq("id", existing["id"]).execute()
     else:
-        client.table("profiles").insert(data).execute()
+        c.table("profiles").insert(data).execute()
 
 
 def load_recommendations(profile_id: str):
     result = (
-        client.table("recommendations")
+        _fresh_client().table("recommendations")
         .select("*, tenders(*)")
         .eq("profile_id", profile_id)
         .order("relevance_score", desc=True)
