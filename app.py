@@ -9,7 +9,8 @@ load_dotenv()
 
 import httpx
 from supabase import create_client, Client
-from database import save_feedback
+from database import get_client as get_service_client, save_feedback, save_recommendation
+from matcher import match_profile
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
@@ -184,6 +185,23 @@ if page == "My Recommendations":
 
     if not recs:
         st.info("No recommendations yet. The daily digest runs every morning at 8 AM IST.")
+        if st.button("Generate recommendations now", type="primary"):
+            with st.spinner("Running matcher — this takes about 30 seconds..."):
+                try:
+                    service_client = get_service_client()
+                    results = match_profile(service_client, profile)
+                    for r in results:
+                        save_recommendation(
+                            service_client,
+                            tender_id=r["tender_id"],
+                            profile_id=profile["id"],
+                            score=r["score"],
+                            reason=r["reason"],
+                        )
+                    st.success(f"Done — {len(results)} recommendations generated.")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Pipeline failed: {e}")
         st.stop()
 
     col1, col2, col3 = st.columns(3)
