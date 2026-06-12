@@ -189,7 +189,19 @@ if page == "My Recommendations":
             with st.spinner("Running matcher — this takes about 30 seconds..."):
                 try:
                     service_client = get_service_client()
+                    st.write(f"Profile units: {profile.get('preferred_units')}")
+                    st.write(f"GeM only: {profile.get('gem_only')}")
+                    st.write(f"Work scope: {profile.get('work_scope', '')[:80]}")
+                    from embedder import embed_query, find_similar_tenders
+                    query_vec = embed_query(profile.get("work_scope", ""))
+                    candidates = find_similar_tenders(
+                        service_client, query_vec, top_k=20,
+                        only_gem=profile.get("gem_only", False),
+                        preferred_units=profile.get("preferred_units") or [],
+                    )
+                    st.write(f"Vector search candidates: {len(candidates)}")
                     results = match_profile(service_client, profile)
+                    st.write(f"After Claude scoring: {len(results)}")
                     for r in results:
                         save_recommendation(
                             service_client,
@@ -202,6 +214,8 @@ if page == "My Recommendations":
                     st.rerun()
                 except Exception as e:
                     st.error(f"Pipeline failed: {e}")
+                    import traceback
+                    st.code(traceback.format_exc())
         st.stop()
 
     col1, col2, col3 = st.columns(3)
