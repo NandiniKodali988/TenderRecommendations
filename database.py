@@ -3,12 +3,8 @@ from dataclasses import asdict
 from supabase import create_client, Client
 from scraper import Tender
 
-SUPABASE_URL = os.environ["SUPABASE_URL"]
-SUPABASE_KEY = os.environ["SUPABASE_KEY"]
-
-
 def get_client() -> Client:
-    return create_client(SUPABASE_URL, SUPABASE_KEY)
+    return create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
 
 
 def get_known_nit_numbers(client: Client) -> set[str]:
