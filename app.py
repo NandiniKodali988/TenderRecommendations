@@ -183,12 +183,14 @@ if page == "My Recommendations":
 
     recs = load_recommendations(profile["id"])
 
-    btn_label = "Generate recommendations now" if not recs else "Check for new recommendations"
+    btn_label = "Generate recommendations now" if not recs else "Refresh recommendations"
     btn_type = "primary" if not recs else "secondary"
     if st.button(btn_label, type=btn_type):
         with st.spinner("Running matcher — this takes about 30 seconds..."):
             try:
                 service_client = get_service_client()
+                # Clear stale recommendations so all tenders are re-scored against the current profile
+                service_client.table("recommendations").delete().eq("profile_id", profile["id"]).execute()
                 results = match_profile(service_client, profile)
                 for r in results:
                     save_recommendation(
@@ -198,7 +200,7 @@ if page == "My Recommendations":
                         score=r["score"],
                         reason=r["reason"],
                     )
-                st.success(f"Done — {len(results)} new recommendations added.")
+                st.success(f"Done — {len(results)} recommendations generated.")
                 st.rerun()
             except Exception as e:
                 st.error(f"Pipeline failed: {e}")
