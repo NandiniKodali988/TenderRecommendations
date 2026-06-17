@@ -34,67 +34,21 @@ The scraper is profile-agnostic — it fetches broadly and stores everything. Fi
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    subgraph actions["⏰ GitHub Actions · Daily 8 AM IST"]
-        cron["Cron trigger"]
-    end
+Three swim lanes — **Process**, **Execution**, and **State** — flowing left to right.
 
-    subgraph pipeline["Daily Pipeline · run.py"]
-        scraper["scraper.py\nFetch all active BHEL tenders"]
-        matcher["matcher.py\nFilter → embed → score → rank"]
-        emailer["emailer.py\nSend digest"]
-    end
+**Process** (what happens, in order)
 
-    subgraph ai["AI Layer"]
-        embeddings["sentence-transformers\nall-MiniLM-L6-v2"]
-        claude["Claude Haiku\nRelevance scoring + reasons"]
-    end
+`Set up profile` → `Scrape BHEL tenders` → `Hard filter` → `Semantic search + AI scoring` → `Email digest` → `View recommendations` → `Give feedback`
 
-    subgraph db["Supabase · PostgreSQL + pgvector"]
-        tenders[("tenders")]
-        profiles[("profiles")]
-        recs[("recommendations")]
-    end
+**Execution** (the components that do the work)
 
-    subgraph web["Web Layer"]
-        streamlit["Streamlit\nProfile setup · Recommendations dashboard"]
-        fastapi["FastAPI\nREST API"]
-    end
+`Streamlit (app.py)` → `GitHub Actions cron · scraper.py` → `matcher.py · keyword filter` → `embedder.py · all-MiniLM · pgvector` + `Claude Haiku` → `emailer.py · Gmail SMTP` → `Streamlit dashboard · FastAPI` → `feedback saved to DB`
 
-    subgraph eval_box["Evaluation"]
-        export_py["eval/export.py"]
-        judge_py["eval/llm_judge.py"]
-        dataset[("eval_dataset.json")]
-    end
+**State / Infrastructure** (where data lives)
 
-    user["👤 Sub-contractor"]
-    email["📧 Gmail inbox"]
-    bhel["tenders.bhel.com"]
+`Supabase PostgreSQL` (tenders · profiles · recommendations) · `pgvector index` · `GitHub repo + CI/CD` · `Hugging Face Spaces (Docker)`
 
-    cron --> scraper
-    bhel --> scraper
-    scraper -->|"upsert new tenders"| tenders
-    tenders --> matcher
-    profiles --> matcher
-    matcher --> embeddings
-    matcher --> claude
-    matcher -->|"save scored recs"| recs
-    recs --> emailer
-    emailer --> email
-
-    user <-->|"Google OAuth + RLS"| streamlit
-    user --> email
-    streamlit <--> profiles
-    streamlit <--> recs
-    fastapi <--> profiles
-    fastapi <--> recs
-
-    recs --> export_py
-    export_py --> dataset
-    dataset --> judge_py
-    judge_py -->|"LLM judge scores"| dataset
-```
+Cross-lane connections: Streamlit and GitHub Actions both read/write Supabase. Claude Haiku is an external service called from the Execution lane.
 
 ---
 
