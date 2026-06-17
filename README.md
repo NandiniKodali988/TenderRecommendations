@@ -32,6 +32,72 @@ The scraper is profile-agnostic — it fetches broadly and stores everything. Fi
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph actions["⏰ GitHub Actions · Daily 8 AM IST"]
+        cron["Cron trigger"]
+    end
+
+    subgraph pipeline["Daily Pipeline · run.py"]
+        scraper["scraper.py\nFetch all active BHEL tenders"]
+        matcher["matcher.py\nFilter → embed → score → rank"]
+        emailer["emailer.py\nSend digest"]
+    end
+
+    subgraph ai["AI Layer"]
+        embeddings["sentence-transformers\nall-MiniLM-L6-v2"]
+        claude["Claude Haiku\nRelevance scoring + reasons"]
+    end
+
+    subgraph db["Supabase · PostgreSQL + pgvector"]
+        tenders[("tenders")]
+        profiles[("profiles")]
+        recs[("recommendations")]
+    end
+
+    subgraph web["Web Layer"]
+        streamlit["Streamlit\nProfile setup · Recommendations dashboard"]
+        fastapi["FastAPI\nREST API"]
+    end
+
+    subgraph eval_box["Evaluation"]
+        export_py["eval/export.py"]
+        judge_py["eval/llm_judge.py"]
+        dataset[("eval_dataset.json")]
+    end
+
+    user["👤 Sub-contractor"]
+    email["📧 Gmail inbox"]
+    bhel["tenders.bhel.com"]
+
+    cron --> scraper
+    bhel --> scraper
+    scraper -->|"upsert new tenders"| tenders
+    tenders --> matcher
+    profiles --> matcher
+    matcher --> embeddings
+    matcher --> claude
+    matcher -->|"save scored recs"| recs
+    recs --> emailer
+    emailer --> email
+
+    user <-->|"Google OAuth + RLS"| streamlit
+    user --> email
+    streamlit <--> profiles
+    streamlit <--> recs
+    fastapi <--> profiles
+    fastapi <--> recs
+
+    recs --> export_py
+    export_py --> dataset
+    dataset --> judge_py
+    judge_py -->|"LLM judge scores"| dataset
+```
+
+---
+
 ## What I built
 
 **Phase 1 — core pipeline**
