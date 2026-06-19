@@ -22,13 +22,13 @@ This project fixes that. It scrapes all active BHEL tenders daily, matches them 
 
 A GitHub Actions cron job runs every morning at 8 AM IST. It scrapes tenders.bhel.com, stores new tenders in Supabase, and then for each sub-contractor profile:
 
-1. **Hard filter** — drops tenders outside the user's preferred BHEL locations, tender types, and value range. No API cost.
-2. **Semantic search** — embeds the remaining tenders with `sentence-transformers` and does a pgvector similarity search against the user's work scope.
-3. **AI scoring** — Claude scores each shortlisted tender and writes a plain-English reason for the match.
-4. **Feedback boost** — if the user has previously marked tenders as helpful, their embeddings are blended into the query vector. The more feedback, the stronger the signal.
-5. **Email digest** — ranked list of relevant tenders lands in their inbox.
+1. **Hard filter** drops tenders outside the user's preferred BHEL locations, tender types, and value range. No API cost.
+2. **Semantic search** embeds the remaining tenders with `sentence-transformers` and does a pgvector similarity search against the user's work scope.
+3. **AI scoring** has Claude score each shortlisted tender and write a plain-English reason for the match.
+4. **Feedback boost** blends liked tenders into the query vector if the user has given thumbs up before. The more feedback, the stronger the signal.
+5. **Email digest** sends a ranked list of relevant tenders to their inbox.
 
-The scraper is profile-agnostic — it fetches broadly and stores everything. Filters live in the profile, so adding a new user later requires zero changes to the pipeline.
+The scraper is profile-agnostic. It fetches broadly and stores everything. Filters live in the profile, so adding a new user later requires zero changes to the pipeline.
 
 ---
 
@@ -58,39 +58,31 @@ flowchart TB
 
 ---
 
-## What I built
+## What's inside
 
-**Phase 1 — core pipeline**
-- Scraper with early-stop on already-seen tenders
-- Supabase schema (tenders, profiles, recommendations)
-- Claude Haiku batch scoring with match reasons
-- Gmail SMTP digest
-- GitHub Actions cron workflow
-- Streamlit profile setup + recommendations dashboard
+The scraper runs on a schedule and is completely separate from the matching logic. It pulls all active BHEL tenders and stores them in Supabase with no filters and no assumptions about who's using the system. Adding a new sub-contractor later requires zero changes to the scraper. Their preferences live in their profile and get applied at match time.
 
-**Phase 2 — portfolio enhancements**
+The matching pipeline goes through a few stages. First it drops tenders that obviously don't fit: wrong BHEL unit, wrong tender type, excluded keywords. That's cheap and fast. Then it embeds the remaining tenders and does a vector similarity search against the user's work scope description using pgvector. Claude then looks at the top candidates and writes a plain-English reason for each match. If the user has given thumbs up feedback before, those liked tenders get blended into the query vector, so the recommendations get more personalised over time.
 
-| Feature | What it shows |
-|---|---|
-| RAG pipeline (pgvector + sentence-transformers) | Vector search, embeddings, retrieval-augmented generation |
-| Feedback loop with dynamic vector boosting | Adaptive AI — user signal improves future recommendations |
-| Multi-agent architecture (Claude tool use) | Agentic AI — orchestrator drives scraper, analyst, and editor agents |
-| FastAPI backend | Clean API layer separating backend from UI |
-| Supabase Auth + Row Level Security | Multi-tenant auth, each user only sees their own data |
+The web app is built in Streamlit and sits on top of a FastAPI backend. Authentication is handled by Supabase Auth with Google login, and Row Level Security makes sure each user only ever sees their own data.
+
+There's also a small evaluation setup in the `eval/` folder. It exports recommendations and human feedback to JSON, then runs an independent LLM judge that re-scores each tender without seeing the original Claude score. Useful for checking whether the recommendations are actually good.
 
 ---
 
 ## Tech stack
 
-| Layer | Tool |
+| | |
 |---|---|
-| Web app | Streamlit, hosted on Hugging Face Spaces |
+| Web app | Streamlit on Hugging Face Spaces |
 | REST API | FastAPI |
-| Database + auth | Supabase (PostgreSQL, pgvector, Supabase Auth) |
+| Database + auth | Supabase (PostgreSQL + pgvector + Supabase Auth) |
 | Embeddings | sentence-transformers (all-MiniLM-L6-v2) |
-| AI scoring + agents | Claude (Anthropic API) |
+| AI scoring | Claude Haiku (Anthropic) |
+| Agents | Claude tool use (orchestrator, scraper, analyst, editor) |
 | Email | Gmail SMTP |
 | Scheduling | GitHub Actions cron |
+| Tests | pytest, 19 unit tests, CI on every push |
 
 ---
 
@@ -115,8 +107,14 @@ To run the API:
 uvicorn api:app --reload
 ```
 
+To run tests:
+```bash
+pip install -r requirements-dev.txt
+pytest tests/ -v
+```
+
 ---
 
-## Credentials needed
+## Credentials
 
 See `.env.example`. You'll need a Supabase project, an Anthropic API key, and a Gmail app password.
