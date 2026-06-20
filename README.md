@@ -34,27 +34,7 @@ The scraper is profile-agnostic. It fetches broadly and stores everything. Filte
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    subgraph Process
-        direction LR
-        p1["Set up profile"] --> p2["Scrape BHEL tenders"] --> p3["Hard filter"] --> p4["Semantic search\n+ AI scoring"] --> p5["Email digest"] --> p6["View recommendations"] --> p7["Give feedback"]
-    end
-
-    subgraph Execution
-        direction LR
-        e1["Streamlit\napp.py"] --> e2["GitHub Actions\nscraper.py"] --> e3["matcher.py\nkeyword filter"] --> e4["embedder.py · pgvector\nClaude Haiku"] --> e5["emailer.py\nGmail SMTP"] --> e6["Streamlit dashboard\nFastAPI"] --> e7["Feedback stored"]
-    end
-
-    subgraph State["State / Infrastructure"]
-        direction LR
-        s1[("Supabase\ntenders · profiles · recs")] --- s2[("pgvector index")] --- s3["GitHub repo\n+ CI/CD"] --- s4["Hugging Face Spaces\nDocker"]
-    end
-
-    e2 <--> s1
-    e4 <--> s2
-    e6 <--> s1
-```
+![](images/arch.png)
 
 ---
 
