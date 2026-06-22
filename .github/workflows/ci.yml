@@ -3,8 +3,18 @@ name: Tests
 on:
   push:
     branches: ["main", "feat/**"]
+    paths-ignore:
+      - "**.md"
+      - "images/**"
+      - "sql/**"
+      - "eval/**"
   pull_request:
     branches: ["main"]
+    paths-ignore:
+      - "**.md"
+      - "images/**"
+      - "sql/**"
+      - "eval/**"
 
 jobs:
   test:
